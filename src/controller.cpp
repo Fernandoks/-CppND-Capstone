@@ -1,7 +1,7 @@
 #include "controller.h"
 #include <iostream>
 #include "SDL.h"
-#include "snake.h"
+
 
 void Controller::ChangeDirection(Snake &snake, Snake::Direction input,
                                  Snake::Direction opposite) const {
@@ -9,12 +9,17 @@ void Controller::ChangeDirection(Snake &snake, Snake::Direction input,
   return;
 }
 
-void Controller::HandleInput(bool &running, Snake &snake) const {
+void Controller::HandleInput(bool &running, Snake &snake) 
+{
   SDL_Event e;
-  while (SDL_PollEvent(&e)) {
-    if (e.type == SDL_QUIT) {
+  while (SDL_PollEvent(&e)) 
+  {
+    if (e.type == SDL_QUIT) 
+    {
       running = false;
-    } else if (e.type == SDL_KEYDOWN) {
+    } 
+    else if (e.type == SDL_KEYDOWN) 
+    {
       switch (e.key.keysym.sym) {
         case SDLK_UP:
           ChangeDirection(snake, Snake::Direction::kUp,
@@ -35,7 +40,31 @@ void Controller::HandleInput(bool &running, Snake &snake) const {
           ChangeDirection(snake, Snake::Direction::kRight,
                           Snake::Direction::kLeft);
           break;
+
+          //Including a pause key
+        case SDLK_ESCAPE:
+            if (_paused == false) Pause();
+            else Resume();
+         break; 
+
       }
     }
   }
+}
+
+// Pausing
+
+bool Controller::IsPaused()
+{
+  return _paused;
+}
+
+void Controller::Pause()
+{
+  this->_paused = true;
+}
+
+void Controller::Resume()
+{
+  this->_paused = false;
 }

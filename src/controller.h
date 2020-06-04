@@ -5,11 +5,19 @@
 
 class Controller {
  public:
-  void HandleInput(bool &running, Snake &snake) const;
+  void HandleInput(bool &running, Snake &snake);
+  bool IsPaused();
+
 
  private:
   void ChangeDirection(Snake &snake, Snake::Direction input,
                        Snake::Direction opposite) const;
+
+  void Resume();
+  void Pause();
+
+  mutable bool _paused;
+
 };
 
 #endif

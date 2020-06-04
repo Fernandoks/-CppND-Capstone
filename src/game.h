@@ -6,18 +6,25 @@
 #include "controller.h"
 #include "renderer.h"
 #include "snake.h"
+#include "audio.h"
+
+void TimerThread(bool *poisoned);
 
 class Game {
  public:
   Game(std::size_t grid_width, std::size_t grid_height);
-  void Run(Controller const &controller, Renderer &renderer,
+  ~Game();
+  void Run(Controller &controller, Renderer &renderer,
            std::size_t target_frame_duration);
   int GetScore() const;
   int GetSize() const;
+  bool IsBadFood() const {return _badfood;}
 
  private:
   Snake snake;
   SDL_Point food;
+
+  Audio effect;
 
   std::random_device dev;
   std::mt19937 engine;
@@ -25,9 +32,9 @@ class Game {
   std::uniform_int_distribution<int> random_h;
 
   int score{0};
-
+  bool _badfood;
   void PlaceFood();
-  void Update();
+  void Update(Controller &controller, Renderer &renderer);
 };
 
 #endif
