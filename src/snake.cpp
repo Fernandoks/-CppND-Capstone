@@ -53,15 +53,16 @@ void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) 
   } 
   else if (_reducing)
   {
-    body.erase(body.begin());
+    //body.erase(body.begin());
+    body.pop_back();
     _reducing = false;
     size--; 
-    /*
-    if (size == 0)
+    if (size <= 1)
     {
       alive = false;
+      return;
     }
-    */
+    
   }
   else 
   {

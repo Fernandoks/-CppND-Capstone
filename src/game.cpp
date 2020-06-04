@@ -3,7 +3,7 @@
 #include <thread>
 #include <chrono>
 #include <future>
-#include "SDL.h"
+#include "SDL2/SDL.h"
 
 Game::Game(std::size_t grid_width, std::size_t grid_height)
     : snake(grid_width, grid_height),
@@ -14,10 +14,6 @@ Game::Game(std::size_t grid_width, std::size_t grid_height)
   PlaceFood();
 }
 
-Game::~Game()
-{
-
-}
 
 void Game::Run(Controller &controller, Renderer &renderer,
                std::size_t target_frame_duration) 
@@ -29,6 +25,13 @@ void Game::Run(Controller &controller, Renderer &renderer,
   int frame_count = 0;
   bool running = true;
 
+  AudioSuccess.load("../sounds/success.wav");
+  AudioError.load("../sounds/error.wav");
+  AudioGameOver.load("../sounds/gameover.wav");
+  AudioStart.load("../sounds/start.wav");
+
+  AudioStart.play();
+
   while (running) 
   {
     frame_start = SDL_GetTicks();
@@ -36,7 +39,13 @@ void Game::Run(Controller &controller, Renderer &renderer,
     // Input, Update, Render - the main game loop.
     controller.HandleInput(running, snake);
     Update(controller, renderer);
-    renderer.Render(snake, food, this->IsBadFood());
+    renderer.Render(snake, food, this->IsBadFood(),score);
+
+    if (!snake.alive) 
+    {
+      AudioGameOver.play();
+      return;
+    }
 
     frame_end = SDL_GetTicks();
 
@@ -49,6 +58,7 @@ void Game::Run(Controller &controller, Renderer &renderer,
     if (frame_end - title_timestamp >= 1000) 
     {
       renderer.UpdateWindowTitle(score, frame_count);
+      //renderer.DisplayText();
       frame_count = 0;
       title_timestamp = frame_end;
     }
@@ -103,19 +113,14 @@ void TimerThread(bool *poisoned) {
 
 void Game::Update(Controller &controller, Renderer &renderer) 
 {
-  //Checks if the game is paused
+    //Checks if the game is paused
   if (controller.IsPaused() == true)
   {
     renderer.PauseTitle();
     return;
   }
 
-  if (!snake.alive) 
-  {
-    effect.load("../sounds/gameover.wav");
-    effect.play();
-    return;
-  }
+ 
 
   snake.Update();
 
@@ -128,8 +133,7 @@ void Game::Update(Controller &controller, Renderer &renderer)
     if (_badfood == true)
     {
       score--;
-      effect.load("../sounds/error.wav");
-      effect.play();
+      AudioError.play();
       PlaceFood();
       // Grow snake and increase speed.
       snake.ReduceBody(); 
@@ -138,8 +142,8 @@ void Game::Update(Controller &controller, Renderer &renderer)
     else 
     {
       score++;
-      effect.load("../sounds/success.wav");
-      effect.play();
+      //effect.load("../sounds/success.wav");
+      AudioSuccess.play();
       PlaceFood();
       // Grow snake and increase speed.
       snake.GrowBody();

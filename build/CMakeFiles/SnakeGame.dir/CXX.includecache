@@ -6,12 +6,26 @@
 
 #IncludeRegexTransform: 
 
-/home/fernandoks/Desktop/CppWorkspace/CppND-Capstone/src/snake.cpp
+/home/fernandoks/Desktop/CppWorkspace/CppND-Capstone/src/renderer.cpp
+renderer.h
+/home/fernandoks/Desktop/CppWorkspace/CppND-Capstone/src/renderer.h
+iostream
+-
+sstream
+-
+string
+-
+
+/home/fernandoks/Desktop/CppWorkspace/CppND-Capstone/src/renderer.h
+vector
+-
+SDL.h
+/home/fernandoks/Desktop/CppWorkspace/CppND-Capstone/src/SDL.h
 snake.h
 /home/fernandoks/Desktop/CppWorkspace/CppND-Capstone/src/snake.h
-cmath
+SDL2/SDL_ttf.h
 -
-iostream
+SDL2/SDL_image.h
 -
 
 /home/fernandoks/Desktop/CppWorkspace/CppND-Capstone/src/snake.h

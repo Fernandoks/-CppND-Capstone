@@ -154,6 +154,8 @@ SnakeGame: CMakeFiles/SnakeGame.dir/src/renderer.cpp.o
 SnakeGame: CMakeFiles/SnakeGame.dir/src/snake.cpp.o
 SnakeGame: CMakeFiles/SnakeGame.dir/src/audio.cpp.o
 SnakeGame: CMakeFiles/SnakeGame.dir/build.make
+SnakeGame: /usr/lib/x86_64-linux-gnu/libSDL2_ttf.so
+SnakeGame: /usr/lib/x86_64-linux-gnu/libSDL2_image.so
 SnakeGame: CMakeFiles/SnakeGame.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/fernandoks/Desktop/CppWorkspace/CppND-Capstone/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable SnakeGame"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/SnakeGame.dir/link.txt --verbose=$(VERBOSE)
