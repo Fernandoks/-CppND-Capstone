@@ -66,7 +66,12 @@ Renderer::Renderer(const std::size_t screen_width,
 
 Renderer::~Renderer() {
   SDL_FreeSurface(surfaceMessage);
+  SDL_FreeSurface(imageSurface);
+  SDL_FreeSurface(windowSurface);
+  SDL_FreeSurface(optimizedImg);
+  
   SDL_DestroyTexture(Message);
+  SDL_DestroyTexture(texture);
   
   SDL_DestroyWindow(sdl_window);
   SDL_Quit();

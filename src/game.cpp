@@ -102,29 +102,21 @@ void Game::PlaceFood() {
     // food.
     if (!snake.SnakeCell(x, y)) 
     {
+      food.x = x;
+      food.y = y;
+      SetGoodFood();
       if (ranvalue <= 5)
       {
         SetBadFood();
-        std::thread poisonTimer(TimerThread, this);
+        std::thread poisonTimer(&Game::TimedThread, this);
         poisonTimer.detach();
       }
-      else 
-      {
-        SetGoodFood();
-      }
-      food.x = x;
-      food.y = y;
       return;
     }
   }
 }
 
-// Clear the poisoned food after 3 seconds
-void TimerThread(Game *game) {
-    std::this_thread::sleep_for(std::chrono::seconds(3));
-    //*poisoned = false;
-    game->SetGoodFood();
-}
+
 
 void Game::Update(Controller &controller, Renderer &renderer) 
 {
@@ -185,4 +177,10 @@ bool Game::IsBadFood()
 
 int Game::GetScore() const { return score; }
 int Game::GetSize() const { return snake.size; }
+
+void Game::TimedThread()
+{
+  std::this_thread::sleep_for(std::chrono::seconds(3));
+  SetGoodFood();
+}
 
