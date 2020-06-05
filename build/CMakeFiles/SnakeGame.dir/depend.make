@@ -3,6 +3,7 @@
 
 CMakeFiles/SnakeGame.dir/src/controller.cpp.o: ../src/controller.cpp
 CMakeFiles/SnakeGame.dir/src/controller.cpp.o: ../src/controller.h
+CMakeFiles/SnakeGame.dir/src/controller.cpp.o: ../src/renderer.h
 CMakeFiles/SnakeGame.dir/src/controller.cpp.o: ../src/snake.h
 CMakeFiles/SnakeGame.dir/src/controller.cpp.o: /usr/include/SDL2/SDL.h
 CMakeFiles/SnakeGame.dir/src/controller.cpp.o: /usr/include/SDL2/SDL_assert.h

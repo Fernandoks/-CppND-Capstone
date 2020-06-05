@@ -4,6 +4,7 @@
 CMakeFiles/SnakeGame.dir/src/controller.cpp.o
  /home/fernandoks/Desktop/CppWorkspace/CppND-Capstone/src/controller.cpp
  /home/fernandoks/Desktop/CppWorkspace/CppND-Capstone/src/controller.h
+ /home/fernandoks/Desktop/CppWorkspace/CppND-Capstone/src/renderer.h
  /home/fernandoks/Desktop/CppWorkspace/CppND-Capstone/src/snake.h
  /usr/include/SDL2/SDL.h
  /usr/include/SDL2/SDL_assert.h

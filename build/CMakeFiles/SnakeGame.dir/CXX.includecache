@@ -40,6 +40,16 @@ SDL2/SDL_mixer.h
 SDL2/SDL.h
 /home/fernandoks/Desktop/CppWorkspace/CppND-Capstone/src/SDL2/SDL.h
 
+/home/fernandoks/Desktop/CppWorkspace/CppND-Capstone/src/main.cpp
+iostream
+-
+controller.h
+/home/fernandoks/Desktop/CppWorkspace/CppND-Capstone/src/controller.h
+game.h
+/home/fernandoks/Desktop/CppWorkspace/CppND-Capstone/src/game.h
+renderer.h
+/home/fernandoks/Desktop/CppWorkspace/CppND-Capstone/src/renderer.h
+
 /home/fernandoks/Desktop/CppWorkspace/CppND-Capstone/src/renderer.h
 vector
 -
