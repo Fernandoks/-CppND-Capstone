@@ -2,12 +2,12 @@
 #include <cmath>
 #include <iostream>
 
-void Snake::Update() {
+void Snake::Update(bool wall) {
   SDL_Point prev_cell{
       static_cast<int>(head_x),
       static_cast<int>(
           head_y)};  // We first capture the head's cell before updating.
-  UpdateHead();
+  UpdateHead(wall);
   SDL_Point current_cell{
       static_cast<int>(head_x),
       static_cast<int>(head_y)};  // Capture the head's cell after updating.
@@ -19,8 +19,10 @@ void Snake::Update() {
   }
 }
 
-void Snake::UpdateHead() {
-  switch (direction) {
+void Snake::UpdateHead(bool wall) 
+{
+  switch (direction) 
+  {
     case Direction::kUp:
       head_y -= speed;
       break;
@@ -37,11 +39,24 @@ void Snake::UpdateHead() {
       head_x += speed;
       break;
   }
-
-  // Wrap the Snake around to the beginning if going off of the screen.
-  head_x = fmod(head_x + grid_width, grid_width);
-  head_y = fmod(head_y + grid_height, grid_height);
+  // check if the wall is active
+  if(wall == true){
+    // check if snake hit the wall
+    if(head_x > 32 || head_y > 32 || head_x < 0 || head_y < 0){
+      std::cout << "you hit the wall" << std::endl;
+      alive = false;
+    
+    }    
+  }
+  else
+  {
+    // Wrap the Snake around to the beginning if going off of the screen.
+    // if there is no wall
+    head_x = fmod(head_x + grid_width, grid_width);
+    head_y = fmod(head_y + grid_height, grid_height);
+  }
 }
+
 
 void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) {
   // Add previous head location to vector
@@ -55,6 +70,8 @@ void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) 
   {
     //body.erase(body.begin());
     body.pop_back();
+    body.push_back(prev_head_cell);
+    body.erase(body.begin());
     _reducing = false;
     size--; 
     if (size <= 1)
@@ -62,7 +79,6 @@ void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) 
       alive = false;
       return;
     }
-    
   }
   else 
   {
@@ -75,7 +91,6 @@ void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) 
   for (auto const &item : body) {
     if (current_head_cell.x == item.x && current_head_cell.y == item.y) {
       alive = false;
-     
     }
   }
 }

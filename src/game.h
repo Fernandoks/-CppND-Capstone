@@ -2,13 +2,16 @@
 #define GAME_H
 
 #include <random>
+#include <mutex>
 #include "SDL.h"
 #include "controller.h"
 #include "renderer.h"
 #include "snake.h"
-#include "audio.h"
+#include "SDL2/SDL_mixer.h"
+#include "SDL2/SDL.h"
 
-void TimerThread(bool *poisoned);
+
+void TimerThread(Game *game);
 
 class Game {
  public:
@@ -17,16 +20,18 @@ class Game {
            std::size_t target_frame_duration);
   int GetScore() const;
   int GetSize() const;
-  bool IsBadFood() const {return _badfood;}
+  bool IsBadFood();
+  void SetBadFood();
+  void SetGoodFood();
 
  private:
   Snake snake;
   SDL_Point food;
 
-  Audio AudioSuccess;
-  Audio AudioError;
-  Audio AudioStart;
-  Audio AudioGameOver;
+  Mix_Chunk *MixSuccess = NULL;
+  Mix_Chunk *MixError = NULL;
+  Mix_Chunk *MixGameOver = NULL;
+  Mix_Chunk *MixStart = NULL;
   
   std::random_device dev;
   std::mt19937 engine;
@@ -35,6 +40,8 @@ class Game {
 
   int score{0};
   bool _badfood;
+  std::mutex _mutex;
+
   void PlaceFood();
   void Update(Controller &controller, Renderer &renderer);
 };

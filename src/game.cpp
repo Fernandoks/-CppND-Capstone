@@ -3,15 +3,28 @@
 #include <thread>
 #include <chrono>
 #include <future>
-#include "SDL2/SDL.h"
+
+#define WAVSUCCESS_PATH "../sounds/success.wav"
+#define WAVERROR_PATH "../sounds/error.wav"
+#define WAVGAMEOVER_PATH "../sounds/gameover.wav"
+#define WAVSTART_PATH "../sounds/start.wav"
+
 
 Game::Game(std::size_t grid_width, std::size_t grid_height)
     : snake(grid_width, grid_height),
       engine(dev()),
       random_w(0, static_cast<int>(grid_width)),
       random_h(0, static_cast<int>(grid_height)), 
-      _badfood(false) {
+      _badfood(false) 
+{
   PlaceFood();
+  Mix_OpenAudio(44100, AUDIO_S16SYS, 2, 512);
+  Mix_AllocateChannels(4);
+  MixSuccess = Mix_LoadWAV(WAVSUCCESS_PATH);
+  MixError = Mix_LoadWAV(WAVERROR_PATH);
+  MixStart = Mix_LoadWAV(WAVSTART_PATH);
+  MixGameOver = Mix_LoadWAV(WAVGAMEOVER_PATH);
+ 
 }
 
 
@@ -25,12 +38,10 @@ void Game::Run(Controller &controller, Renderer &renderer,
   int frame_count = 0;
   bool running = true;
 
-  AudioSuccess.load("../sounds/success.wav");
-  AudioError.load("../sounds/error.wav");
-  AudioGameOver.load("../sounds/gameover.wav");
-  AudioStart.load("../sounds/start.wav");
+  std::string msgText{"Click to START your game. Use ESC to pause, and W to include a Wall"};
+  SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "START", msgText.c_str(), NULL);
 
-  AudioStart.play();
+  Mix_PlayChannel(-1, MixStart, 0);
 
   while (running) 
   {
@@ -39,11 +50,14 @@ void Game::Run(Controller &controller, Renderer &renderer,
     // Input, Update, Render - the main game loop.
     controller.HandleInput(running, snake);
     Update(controller, renderer);
-    renderer.Render(snake, food, this->IsBadFood(),score);
+    renderer.Render(snake, food, this->IsBadFood(),score, controller.IsWall());
 
     if (!snake.alive) 
     {
-      AudioGameOver.play();
+      Mix_PlayChannel(-1, MixGameOver, 0);
+      // show a dialog box
+      std::string msgBoxText{"Score: " + std::to_string(GetScore()) + "\n Size: " + std::to_string(GetSize())};
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "You died!", msgBoxText.c_str(), NULL);
       return;
     }
 
@@ -90,13 +104,13 @@ void Game::PlaceFood() {
     {
       if (ranvalue <= 5)
       {
-        _badfood = true;
-        std::thread poisonTimer(TimerThread, &_badfood);
+        SetBadFood();
+        std::thread poisonTimer(TimerThread, this);
         poisonTimer.detach();
       }
       else 
       {
-        _badfood = false;
+        SetGoodFood();
       }
       food.x = x;
       food.y = y;
@@ -106,9 +120,10 @@ void Game::PlaceFood() {
 }
 
 // Clear the poisoned food after 3 seconds
-void TimerThread(bool *poisoned) {
+void TimerThread(Game *game) {
     std::this_thread::sleep_for(std::chrono::seconds(3));
-    *poisoned = false;
+    //*poisoned = false;
+    game->SetGoodFood();
 }
 
 void Game::Update(Controller &controller, Renderer &renderer) 
@@ -119,10 +134,8 @@ void Game::Update(Controller &controller, Renderer &renderer)
     renderer.PauseTitle();
     return;
   }
-
- 
-
-  snake.Update();
+  
+  snake.Update(controller.IsWall());
 
   int new_x = static_cast<int>(snake.head_x);
   int new_y = static_cast<int>(snake.head_y);
@@ -130,27 +143,44 @@ void Game::Update(Controller &controller, Renderer &renderer)
   // Check if there's food over here
   if (food.x == new_x && food.y == new_y) 
   {
-    if (_badfood == true)
+    if (IsBadFood() == true)
     {
       score--;
-      AudioError.play();
       PlaceFood();
       // Grow snake and increase speed.
       snake.ReduceBody(); 
-      snake.speed += 0.02;
+      snake.speed -= 0.02;
+      Mix_PlayChannel(-1, MixError, 0);
     }
     else 
     {
       score++;
-      //effect.load("../sounds/success.wav");
-      AudioSuccess.play();
       PlaceFood();
       // Grow snake and increase speed.
       snake.GrowBody();
       snake.speed += 0.02;
+      Mix_PlayChannel(-1, MixSuccess, 0);
     }
     
   }
+}
+void Game::SetBadFood()
+{
+  std::lock_guard<std::mutex> lck(_mutex);
+  _badfood = true;
+
+}
+
+void Game::SetGoodFood()
+{
+  std::lock_guard<std::mutex> lck(_mutex);
+  _badfood = false;
+}
+
+bool Game::IsBadFood()
+{
+  std::lock_guard<std::mutex> lck(_mutex);
+  return _badfood;
 }
 
 int Game::GetScore() const { return score; }

@@ -16,7 +16,7 @@ Renderer::Renderer(const std::size_t screen_width,
   if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
     std::cerr << "SDL could not initialize.\n";
     std::cerr << "SDL_Error: " << SDL_GetError() << "\n";
-  }
+  }   
   
   if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG))
   {
@@ -34,7 +34,7 @@ Renderer::Renderer(const std::size_t screen_width,
 
   //TFT
   TTF_Init();
-  font = TTF_OpenFont("../Sans.ttf", 24);
+  font = TTF_OpenFont("../SansBold.ttf", 24);
   if (font == NULL) {
       fprintf(stderr, "error: font not found\n");
       exit(EXIT_FAILURE);
@@ -72,7 +72,7 @@ Renderer::~Renderer() {
   SDL_Quit();
 }
 
-void Renderer::Render(Snake const &snake, SDL_Point const &food, bool isBadFood, int score) {
+void Renderer::Render(Snake const &snake, SDL_Point const &food, bool isBadFood, int score, bool wall) {
   SDL_Rect block;
   block.w = screen_width / grid_width;
   block.h = screen_height / grid_height;
@@ -85,6 +85,13 @@ void Renderer::Render(Snake const &snake, SDL_Point const &food, bool isBadFood,
  
   texture = SDL_CreateTextureFromSurface(sdl_renderer, optimizedImg);
   SDL_RenderCopy(sdl_renderer, texture, NULL, NULL);
+  
+  if(wall == true)
+  {
+    SDL_SetRenderDrawColor(sdl_renderer , 0x7E, 0x41, 0x1F, 0xFF);  // brown
+    SDL_Rect box = { 0 ,0 , 640 , 640}; // rectangle around the window
+    SDL_RenderDrawRect(sdl_renderer , &box);
+  }
 
   // Render food
   if (isBadFood == true)

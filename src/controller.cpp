@@ -47,6 +47,9 @@ void Controller::HandleInput(bool &running, Snake &snake)
             else Resume();
          break; 
 
+        case SDLK_w:
+          _wall ? _wall = false : _wall = true;
+        break;
       }
     }
   }

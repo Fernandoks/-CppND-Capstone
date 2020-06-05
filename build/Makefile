@@ -123,33 +123,6 @@ SnakeGame/fast:
 	$(MAKE) -f CMakeFiles/SnakeGame.dir/build.make CMakeFiles/SnakeGame.dir/build
 .PHONY : SnakeGame/fast
 
-src/audio.o: src/audio.cpp.o
-
-.PHONY : src/audio.o
-
-# target to build an object file
-src/audio.cpp.o:
-	$(MAKE) -f CMakeFiles/SnakeGame.dir/build.make CMakeFiles/SnakeGame.dir/src/audio.cpp.o
-.PHONY : src/audio.cpp.o
-
-src/audio.i: src/audio.cpp.i
-
-.PHONY : src/audio.i
-
-# target to preprocess a source file
-src/audio.cpp.i:
-	$(MAKE) -f CMakeFiles/SnakeGame.dir/build.make CMakeFiles/SnakeGame.dir/src/audio.cpp.i
-.PHONY : src/audio.cpp.i
-
-src/audio.s: src/audio.cpp.s
-
-.PHONY : src/audio.s
-
-# target to generate assembly for a file
-src/audio.cpp.s:
-	$(MAKE) -f CMakeFiles/SnakeGame.dir/build.make CMakeFiles/SnakeGame.dir/src/audio.cpp.s
-.PHONY : src/audio.cpp.s
-
 src/controller.o: src/controller.cpp.o
 
 .PHONY : src/controller.o
@@ -294,9 +267,6 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... SnakeGame"
-	@echo "... src/audio.o"
-	@echo "... src/audio.i"
-	@echo "... src/audio.s"
 	@echo "... src/controller.o"
 	@echo "... src/controller.i"
 	@echo "... src/controller.s"
