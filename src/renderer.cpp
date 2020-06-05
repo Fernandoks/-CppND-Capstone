@@ -1,8 +1,47 @@
+/*******************************************************************************
+* Title                 :   Snake Game
+* Filename              :   renderer.cpp
+* Author                :   Fernando Kaba Surjus
+* Origin Date           :   05/06/2020
+* Version               :   1.0.0
+* Compiler              :   GNU G++ 
+* Target                :   Linux
+* Notes                 :   None
+*
+* THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESSED
+* OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+* OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+* IN NO EVENT SHALL THE AUTHOR OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+* STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+* IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+* THE POSSIBILITY OF SUCH DAMAGE.
+*
+*******************************************************************************/
+/*************** SOURCE REVISION LOG *****************************************
+*
+*    Date    Version   Author             Description 
+*  04/06/20  1.0.0   Fernando Kaba Surjus  Initial Release.
+*
+*******************************************************************************/
+/** @file TODO: renderer.cpp
+ *  @brief Renderer Class - responsible to create the SDL2 renderer, and 
+ *         construct the screen textures.
+ */
+/******************************************************************************
+* Includes
+*******************************************************************************/
 #include "renderer.h"
 #include <iostream>
 #include <sstream>
 #include <string>
 
+/******************************************************************************
+* Methods Definitions
+*******************************************************************************/
 
 Renderer::Renderer(const std::size_t screen_width,
                    const std::size_t screen_height,
@@ -12,12 +51,11 @@ Renderer::Renderer(const std::size_t screen_width,
       grid_width(grid_width),
       grid_height(grid_height) {
   // Initialize SDL
-
   if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
     std::cerr << "SDL could not initialize.\n";
     std::cerr << "SDL_Error: " << SDL_GetError() << "\n";
   }   
-  
+  // Initialize SDL image
   if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG))
   {
     std::cerr << "SDL image could not initialize.\n";
@@ -32,7 +70,7 @@ Renderer::Renderer(const std::size_t screen_width,
     std::cerr << " SDL_Error: " << SDL_GetError() << "\n";
   }     
 
-  //TFT
+  //Initialize SDL TFT
   TTF_Init();
   font = TTF_OpenFont("../SansBold.ttf", 24);
   if (font == NULL) {
@@ -40,14 +78,13 @@ Renderer::Renderer(const std::size_t screen_width,
       exit(EXIT_FAILURE);
   }
 
-  //Background 
+  //Load Background and create and Optmized image for the Render
   windowSurface = SDL_GetWindowSurface( sdl_window );
   imageSurface = IMG_Load( "../surface.png");
   if( imageSurface == NULL )
   {
       std::cout << "SDL could not load image! SDL Error: " << SDL_GetError( ) << std::endl;
   }
-
   optimizedImg = SDL_ConvertSurface(imageSurface, windowSurface->format, 0);
   if (optimizedImg == NULL)
   {
@@ -83,14 +120,14 @@ void Renderer::Render(Snake const &snake, SDL_Point const &food, bool isBadFood,
   block.h = screen_height / grid_height;
   
   // Clear screen
-  
   SDL_SetRenderDrawColor(sdl_renderer, 0x1E, 0x1E, 0x1E, 0xFF);
-   
   SDL_RenderClear(sdl_renderer);
- 
+  
+  // Copy the Background texture to the Render
   texture = SDL_CreateTextureFromSurface(sdl_renderer, optimizedImg);
   SDL_RenderCopy(sdl_renderer, texture, NULL, NULL);
   
+  //Inclure the wall
   if(wall == true)
   {
     SDL_SetRenderDrawColor(sdl_renderer , 0x7E, 0x41, 0x1F, 0xFF);  // brown
@@ -130,7 +167,7 @@ void Renderer::Render(Snake const &snake, SDL_Point const &food, bool isBadFood,
   }
   SDL_RenderFillRect(sdl_renderer, &block);
 
-  //Text
+  // Include the Score Text
   std::stringstream ss;
   ss << "Score:" << score;
   std::string s = ss.str();
@@ -141,10 +178,7 @@ void Renderer::Render(Snake const &snake, SDL_Point const &food, bool isBadFood,
   Message_rect.y = 10; // controls the rect's y coordinte
   Message_rect.w = 70; // controls the width of the rect
   Message_rect.h = 30; // controls the height of the rect
-
-
-  //Mind you that (0,0) is on the top left of the window/screen, think a rect as the text's box, that way it would be very simple to understand
-  //Now since it's a texture, you have to put RenderCopy in your game loop area, the area where the whole code executes
+  //Copy the Text Texture to the Render
   SDL_RenderCopy(sdl_renderer, Message, NULL, &Message_rect);
   
   // Update Screen

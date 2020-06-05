@@ -25,7 +25,8 @@ class Game {
  private:
   Snake snake;
   SDL_Point food;
-
+  
+  //Music 
   Mix_Chunk *MixSuccess = NULL;
   Mix_Chunk *MixError = NULL;
   Mix_Chunk *MixGameOver = NULL;

@@ -1,7 +1,45 @@
+/*******************************************************************************
+* Title                 :   Snake Game
+* Filename              :   snake.cpp
+* Author                :   Fernando Kaba Surjus
+* Origin Date           :   05/06/2020
+* Version               :   1.0.0
+* Compiler              :   GNU G++ 
+* Target                :   Linux
+* Notes                 :   None
+*
+* THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESSED
+* OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+* OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+* IN NO EVENT SHALL THE AUTHOR OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+* STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+* IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+* THE POSSIBILITY OF SUCH DAMAGE.
+*
+*******************************************************************************/
+/*************** SOURCE REVISION LOG *****************************************
+*
+*    Date    Version   Author             Description 
+*  04/06/20  1.0.0   Fernando Kaba Surjus  Initial Release.
+*
+*******************************************************************************/
+/** @file TODO: snake.cpp
+ *  @brief Snake Class - responsible to controle the Snake body
+ */
+/******************************************************************************
+* Includes
+*******************************************************************************/
 #include "snake.h"
 #include <cmath>
 #include <iostream>
 
+/******************************************************************************
+* Methods Definitions
+*******************************************************************************/
 void Snake::Update(bool wall) {
   SDL_Point prev_cell{
       static_cast<int>(head_x),
